@@ -2,16 +2,31 @@
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
+
 // create an express server 
 const app = express();
+
 // set route 
 const PORT = process.env.PORT || 3001;
+
 // create link to database file 
 const savedNotes = require('./db/db');
 
 //parse incoming data 
 app.use(express.urlencoded({extended: true}));
 app.use(express.json());
+
+// launch index.html 
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, './public/index.html'));
+});
+// launch notes.html 
+app.get('/notes', (req, res) => {
+    res.sendFile(path.join(__dirname, './public/notes.html'));
+});
+
+// make public folder files readily availabile 
+app.use(express.static('public'));
 
 // view notes 
 app.get('/api/notes', (req,res) => {
@@ -40,7 +55,6 @@ function validateNote (note){
     }
     return true;
 };
-
 // create new note 
 app.post('/api/notes', (req,res) => {
     req.body.id = savedNotes.length.toString();
