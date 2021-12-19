@@ -15,6 +15,8 @@ const savedNotes = require('./db/db');
 //parse incoming data 
 app.use(express.urlencoded({extended: true}));
 app.use(express.json());
+// make public folder files readily availabile 
+app.use(express.static('public'));
 
 // launch index.html 
 app.get('/', (req, res) => {
@@ -25,13 +27,7 @@ app.get('/notes', (req, res) => {
     res.sendFile(path.join(__dirname, './public/notes.html'));
 });
 
-// make public folder files readily availabile 
-app.use(express.static('public'));
 
-// view notes 
-app.get('/api/notes', (req,res) => {
-    res.json(savedNotes)
-});
 
 // function to create new note 
 function createNewNote (body, notesArray){
@@ -55,6 +51,26 @@ function validateNote (note){
     }
     return true;
 };
+
+// function to delete notes 
+function deleteNote (id, notesArray){
+    for (let i = 0; i < notesArray.length; i++){
+        let note = notesArray[i];
+        if(note.id == id){
+            notesArray.splice(i, 1);
+            fs.writeFileSync(
+                path.join(__dirname, './db/db.json'),
+                JSON.stringify(notesArray, null ,2)
+            );
+            break;
+        }
+    }
+}
+// view notes 
+app.get('/api/notes', (req,res) => {
+    res.json(savedNotes)
+});
+
 // create new note 
 app.post('/api/notes', (req,res) => {
     req.body.id = savedNotes.length.toString();
@@ -66,6 +82,10 @@ app.post('/api/notes', (req,res) => {
     }
 });
 
+app.delete('/api/notes', (req, res) => {
+    deleteNote(req.params.id, savedNotes);
+    res.json(savedNotes);
+})
 app.listen(PORT, () => {
     console.log(`API server is ready on port ${PORT}.`);
 });

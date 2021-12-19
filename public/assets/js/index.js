@@ -1,5 +1,3 @@
-const { response } = require("express");
-
 let noteTitle;
 let noteText;
 let saveNoteBtn;
@@ -42,16 +40,6 @@ const saveNote = (note) =>
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(note),
-  })
-  .then(response => {
-    if(response.ok){
-      return response.json();
-    }
-    alert('Error: + response.statusText');
-  })
-  .then(postResponse => {
-    console.log(postResponse);
-    alert('You added a new note!');
   });
 
 const deleteNote = (id) =>
