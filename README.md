@@ -31,7 +31,7 @@ Website application that allows users to create notes. Once a note is created it
 - server.js 
   
 ## Example of Functionality 
-![Note Taker App Preview](./assets/images/note-taker-app.gif)
+![Note Taker App Preview](./public/assets/images/note-taker-app.gif)
 
 ## Instructions 
 1. Fork and clone repository
